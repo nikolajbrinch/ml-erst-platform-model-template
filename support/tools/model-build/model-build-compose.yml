@@ -1,0 +1,12 @@
+version: '3'
+services:
+  scripts:
+    container_name: model-builder
+    build: 
+      context: ./support/tools/model-build
+    volumes:
+      - ./src/main/resources:/mnt/input
+      - ./src/main/scripts:/mnt/scripts
+      - ./build/model-output:/mnt/output
+    command: bash
+    tty: true 

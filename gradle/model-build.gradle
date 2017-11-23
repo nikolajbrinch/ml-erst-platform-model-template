@@ -1,0 +1,31 @@
+import java.util.Set
+
+import org.apache.tools.ant.taskdefs.condition.Os
+
+ext {
+	dockerCommand = Os.isFamily(Os.FAMILY_WINDOWS) ? ['cmd', '/C', 'docker']: ['docker']
+}
+
+
+task modelBuild(dependsOn: ['classes', 'modelBuildDown', 'modelBuildUp']) {
+    doFirst {
+        println "Building model..."
+        
+        def command = createCommand(dockerCommand, [
+            'exec',
+            'model-builder',
+            '/mnt/scripts/build-model.sh'
+        ])
+
+        exec {
+            commandLine (command)
+        }
+
+    }
+}
+
+check.dependsOn modelBuild
+
+private List<String> createCommand(List baseCommand, List arguments) {
+	return  (baseCommand + arguments).flatten().findAll { String arg -> return arg }
+}

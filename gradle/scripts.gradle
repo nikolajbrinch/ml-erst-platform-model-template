@@ -1,0 +1,7 @@
+configurations { 
+	scripts
+}
+
+sourceSets {
+	scripts { resources {srcDir 'src/main/scripts'} }
+}

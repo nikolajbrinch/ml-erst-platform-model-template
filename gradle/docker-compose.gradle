@@ -1,0 +1,45 @@
+import java.util.List
+
+import org.apache.tools.ant.taskdefs.condition.Os
+
+ext {
+	dockerComposeCommand = Os.isFamily(Os.FAMILY_WINDOWS) ? ['cmd', '/C', 'docker-compose']: ['docker-compose']
+	modelBuildImageCommand = dockerComposeCommand + [
+			['--file', 'support/tools/model-build/model-build-compose.yml'],
+			['--project-directory', "${projectDir}"],
+            ['--project-name', 'model-build']
+	]
+}
+
+task modelBuildUp(dependsOn: ['classes']) {
+	doFirst {
+		def modelfilesDirectory = file ("${buildDir}/model-output")
+		modelfilesDirectory.mkdirs()
+		
+		def command = createCommand(modelBuildImageCommand, ['up', '-d' ])
+		
+		println "Starting container: (${command})"
+		
+		sleep(5 * 1000)
+		
+		exec {
+			commandLine (command) 
+		}
+	}
+}
+
+task modelBuildDown(dependsOn: ['classes']) {
+	doFirst {
+		def command = createCommand(modelBuildImageCommand, ['down'])
+		
+		println "Shutting container down : (${command})"
+		
+		exec { 
+			commandLine (command) 
+		}
+	}
+}
+
+private List<String> createCommand(List baseCommand, List arguments) {
+	return  (baseCommand + arguments).flatten().findAll { String arg -> return arg }
+}

@@ -1,0 +1,10 @@
+plugins { id 'org.unbroken-dome.test-sets' version '1.4.2' }
+
+apply plugin: 'idea'
+apply plugin: 'eclipse'
+apply plugin: 'maven'
+
+group = 'ml-platform-models'
+
+apply from: 'gradle/scripts.gradle'
+apply from: 'gradle/model.gradle'

@@ -1,0 +1,6 @@
+import java.util.List
+
+import org.apache.tools.ant.taskdefs.condition.Os
+
+apply from: "${projectDir}/gradle/model-build.gradle"
+apply from: "${projectDir}/gradle/docker-compose.gradle"
